@@ -111,49 +111,23 @@
 <script>
     const form = document.getElementById("registrationForm");
     const fields = ["name", "email", "mobile", "college", "password", "confirmPassword"];
-
-    function validateField(field) {
-        const input = document.getElementById(field);
-        const errorSpan = document.getElementById(field + "Error");
-        if (input.value.trim() === "") {
-            errorSpan.textContent = " Required";
-            return false;
-        } else {
-            errorSpan.textContent = "";
-            return true;
-        }
+    function checkField(id) {
+        const value = document.getElementById(id).value.trim();
+        document.getElementById(id + "Error").textContent = value ? "" : " Required";
+        return !!value;
     }
-
-    // Live validation — trigger on blur and input both
-    fields.forEach(field => {
-        const input = document.getElementById(field);
-
-        input.addEventListener("blur", () => {
-            validateField(field);
-        });
-
-        input.addEventListener("input", () => {
-            validateField(field);
-        });
+    fields.forEach(id => {
+        const input = document.getElementById(id);
+        input.addEventListener("input", () => checkField(id));
+        input.addEventListener("blur", () => checkField(id));
     });
-
-    form.addEventListener("submit", function(event) {
-        event.preventDefault();
-        let isValid = true;
-
-        fields.forEach(field => {
-            if (!validateField(field)) {
-                isValid = false;
-            }
-        });
-
-        if (isValid) {
-            document.getElementById("successMessage").textContent = "Form submitted successfully!";
-        } else {
-            document.getElementById("successMessage").textContent = "";
-        }
+    form.addEventListener("submit", e => {
+        e.preventDefault();
+        const allValid = fields.every(checkField);
+        document.getElementById("successMessage").textContent = allValid ? "Form submitted successfully!" : "";
     });
 </script>
+
 
 </body>
 </html>
